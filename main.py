@@ -4,7 +4,7 @@ import time
 from firebase_config import init_firebase
 
 firebase = init_firebase()
-auth = firebase.auth()  # Initialize Firebase auth
+auth = firebase.auth()  
 
 class Authentication(UserControl):
     def __init__(self):
