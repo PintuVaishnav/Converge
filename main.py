@@ -7,98 +7,103 @@ firebase = init_firebase()
 
 class Authentication(UserControl):
     def __init__(self):
-        self.auth_box = Container(
-            width=740,
-            height=250,
-            bgcolor="white",
-            animate=animation.Animation(550, "easeOutBack"),
-            border_radius=8,
-            padding=10
-        )
-        self.auth_box.rows = Row(
-            alignment=MainAxisAlignment.CENTER,
-            spacing=30,
-            # opacity=0,
-            animate_opacity=800,
-        )
-
-        self.sign_in_email = self.auth_options("Email You Email Id", False)
-        self.sign_in_password = self.auth_options("Password", True)
-
-        self.register_email = self.auth_options("Email You Email Id", False)
-        self.register_password = self.auth_options("Password", True)
-
-        self.register_confirm_password = self.auth_options("Confirm Password", True)
-        
-
-
-
         super().__init__()
 
+        self.auth_box = Container(
+            width=0,  # Start with 0 width for animation
+            height=400,
+            bgcolor="white",
+            animate=animation.Animation(500, "easeOutBack"),  # Smooth animation
+            border_radius=8,
+            padding=20,
+        )
+        self.sign_in_email = self.auth_options("Enter Your Email ID", False)
+        self.sign_in_password = self.auth_options("Enter Your Password", True)
+        self.sign_in_btn = self.auth_buttons("Sign In", None)
+        self.register_email = self.auth_options("Register Your Email ID", False)
+        self.register_password = self.auth_options("Register Your Password", True)
+        self.register_btn = self.auth_buttons("Register", None)
+
     def open_auth_box(self):
-        time.sleep(1)
-        self.auth_box.width = 790
+        self.auth_box.width = 740  # Expand the box to full width
         self.auth_box.update()
 
-    def auth_options(self , label, password):
+    def auth_options(self, label, password):
         return TextField(
-                label = label,
-                label_style = TextStyle(size=8, color="black", weight=FontWeight.BOLD),
-                width=250,
-                height=50,
-                password = password
-            
+            label=label,
+            label_style=TextStyle(size=12, color="black", weight=FontWeight.BOLD),
+            width=250,
+            height=50,
+            password=password,
+        )
+
+    def auth_buttons(self, label, btn_func):
+        return ElevatedButton(
+            content=Text(label, color="white", size=15, weight=FontWeight.BOLD),
+            width=250,
+            height=50,
+            style=ButtonStyle(
+                shape=RoundedRectangleBorder(radius=8),
+
+            ),
+            bgcolor="black",
+            on_click=btn_func,
         )
 
 
+
+
     def build(self):
-
-        labels = [
-            "Sign In",
-            "Register"
-        ]
-        texts = [
-            self.sign_in_email,
-            self.sign_in_password,
-            self.register_email,
-            self.register_password,
-            self.register_confirm_password
-
-        ]
-
-        for label, text in zip(labels, texts):
-            column = Column(
-                horizontal_alignment=CrossAxisAlignment.CENTER,
-                alignment=MainAxisAlignment.CENTER,
-                spacing=30
-            )
-            items = []
-            items.append(Text(label, color="black", size=20, weight=FontWeight.BOLD, text_align=TextAlign.CENTER))
-            items.append(text)
-
-            column.controls = items
-            self.auth_box.rows.controls.append(column)
-
-        self.auth_box.rows.controls.insert(
-            1, Text("Or", color="black", size=30, weight=FontWeight.BOLD)
+        sign_in_column = Column(
+            [
+                Text("Sign In", color="black", size=20, weight=FontWeight.BOLD, text_align=TextAlign.CENTER),
+                self.sign_in_email,
+                self.sign_in_password,
+                self.sign_in_btn,
+            ],
+            alignment=MainAxisAlignment.CENTER,
+            spacing=30,
+            horizontal_alignment=CrossAxisAlignment.CENTER,
         )
 
-        self.auth_box.content = self.auth_box.rows
-        self.update()
+        register_column = Column(
+            [
+                Text("Register", color="black", size=20, weight=FontWeight.BOLD, text_align=TextAlign.CENTER),
+                self.register_email,
+                self.register_password,
+                self.register_btn,
+            ],
+            alignment=MainAxisAlignment.CENTER,
+            spacing=30,
+            horizontal_alignment=CrossAxisAlignment.CENTER,
+        )
 
-    def build(self):
+        self.auth_box.content = Row(
+            [
+                sign_in_column,
+                Text("Or", color="black", size=25, weight=FontWeight.BOLD, text_align=TextAlign.CENTER ,),
+                register_column,
+            ],
+            spacing=20,
+            alignment=MainAxisAlignment.CENTER,
+            vertical_alignment=CrossAxisAlignment.CENTER,
+        )
+
         return self.auth_box
 
 def main(page: ft.Page):
     page.title = "Converge"
     page.horizontal_alignment = "center"
     page.vertical_alignment = "center"
+    page.bgcolor = "black"
 
     auth = Authentication()
     page.add(auth)
 
-    auth.open_auth_box()
+    # Trigger the animation after the page loads
     page.update()
+    time.sleep(0.5)  # Slight delay for better visual effect
+    auth.open_auth_box()
 
 if __name__ == "__main__":
     ft.app(target=main)
