@@ -1,3 +1,4 @@
+# Converge is a real-time chat application that allows users to communicate with each other in a secure and private way. In simple this is a group chat app Where The auth Users can chat among themselves.
 import datetime
 import flet as ft
 from flet import *
