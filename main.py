@@ -1,11 +1,16 @@
+import datetime
 import flet as ft
 from flet import *
 import time
+
+import requests
 from firebase_config import init_firebase
+import firebase_config
 
 # Initialize Firebase
 firebase = init_firebase()
 auth = firebase.auth()
+db = firebase.database()
 
 class Authentication(UserControl):
     def __init__(self):
@@ -35,21 +40,25 @@ class Authentication(UserControl):
         self.auth_box.update()
 
     def close_auth_box(self):
-        self.auth_box.width = 0
         self.auth_box.opacity = 0
         self.auth_box.update()
         time.sleep(0.8)
-        
-        if self.auth_box in self.page.controls:
-            self.page.controls.remove(self.auth_box)
-        
-        self.page.update()
-        chat_view = ChatView()
-        self.page.controls.insert(0, chat_view)
+        self.auth_box.width = 0
+        self.auth_box.update()
+        time.sleep(0.8)
+
+        self.page.controls.remove(self)
+        time.sleep(0.3)
+
+        self.chat = ChatView(self.userid, self.email)
+
+        self.page.controls.insert(0, self.chat)
         self.page.update()
         time.sleep(0.3)
-        chat_view.open_chat_box()
-        self.page.update()
+
+
+        self.chat.open_chat_box()
+
 
 
     def auth_users(self, event):
@@ -60,6 +69,7 @@ class Authentication(UserControl):
             self.userid = user["localId"]
             self.email = user["email"]
             print("Sign-in successful:", self.email)
+            print("Auth ID Token:", auth.current_user['idToken'])
             self.close_auth_box()
         except Exception as e:
             print("Error during sign-in:", e)
@@ -72,7 +82,6 @@ class Authentication(UserControl):
             self.userid = user["localId"]
             self.email = user["email"]
             print("Registration successful:", self.email)
-            self.show_message(f"Registration successful for user: {self.email}")
         except Exception as e:
             print("Error during registration:", e)
 
@@ -94,7 +103,8 @@ class Authentication(UserControl):
             bgcolor="black",
             on_click=btn_func,
         )
-
+    
+    
     def build(self):
         sign_in_column = Column(
             [
@@ -135,22 +145,222 @@ class Authentication(UserControl):
 
 
 class ChatView(UserControl):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, userid, email):
+        super().__init__()  
+        self.userid = userid
+        self.email = email
+        self.count = 0
         self.chat_box = Container(
-            width=620,
+            width=680,
             height=0,
             bgcolor="white",
             animate=animation.Animation(550, "easeOutBack"),
             border_radius=8,
             clip_behavior=ClipBehavior.HARD_EDGE,
         )
+        self.chat_area = Column(
+            expand=True,
+            auto_scroll=True,
+            scroll="hidden",
+        )
+        self.chat_input = TextField(
+            hint_text="Type your message here...",
+            multiline=True,
+            width=600,
+            height=50,
+            text_size=15,
+            content_padding=8,
+            border_radius=5,
+        )
+        self.send_chat_btn = ElevatedButton(
+            content=Icon(
+                name=Icons.SEND,
+                color="white",
+                size=15,
+                rotate=transform.Rotate(5.5, alignment.center)
+            ),
+            width=50,
+            height=50,
+            bgcolor="black",
+            style=ButtonStyle(shape=RoundedRectangleBorder(radius=8)),
+            on_click=lambda e: self.push_message_to_db(e),
+        )
+
+        self.start_listening()
+        self.set_chat_history()
+
+    def push_message_to_db(self, event):
+        try:
+            data = {
+                "email": self.email,
+                "message": self.chat_input.value,
+                "sender": self.userid,
+                "timestamp": int(time.time() * 1000),
+            }
+            db.child("message").child(data["timestamp"]).set(data)
+        except requests.exceptions.HTTPError as e:
+            print("Error during message push:",e )
+        except Exception as e:
+            print("Unexpected error:", e)
+        finally:
+            self.chat_input.value = ""
+            self.chat_input.update()
+
+    
+
+
+
+    def chat_message_ui(self,sent_time, name, text_message, bg, col_pos, row_pos):
+        return Container(
+         padding=padding.only(left=25, right=25, top=12, bottom=12),   
+         bgcolor=bg,
+         border_radius=8,
+         margin=5,
+         content=Column(
+         horizontal_alignment=col_pos,
+         spacing=10,
+         controls=[
+             Row(
+                 alignment=row_pos,
+                 controls=[
+                     Text(
+                         name + " 0 " + sent_time,
+                         color="black",
+                         size=15,
+                         weight=FontWeight.BOLD,
+                     )
+                 ],
+             ),
+             Row(
+                 alignment=row_pos,
+                 controls=[
+                     Text(
+                         text_message,
+                         color="black",
+                         size=15,
+             )
+             ],
+             ),
+         ],
+
+         )
+        )
+    
+    def set_chat_history(self):
+        try:
+            messages = db.child("message").get()
+            if messages.each():
+                items = []
+                for message in messages.each():
+                    value = message.val()
+                    time = datetime.datetime.fromtimestamp(int(value["timestamp"]) / 1000.0).strftime('%H:%M')
+                    items.append(
+                        self.chat_message_ui(
+                            time,
+                            value["email"],
+                            value["message"],
+                            "white" if value["sender"] == self.userid else "lightblue",
+                            CrossAxisAlignment.END if value["sender"] == self.userid else CrossAxisAlignment.START,
+                            MainAxisAlignment.END if value["sender"] == self.userid else MainAxisAlignment.START,
+                        )
+                    )
+                for item in items:
+                    self.chat_area.controls.append(item)
+                if hasattr(self, 'page'):
+                    self.page.update()
+                self.chat_area.update()
+            else:
+                print("No messages found in the database.")
+        except Exception as e:
+            print("Error retrieving messages:", e)
+
+
+
+
+    def start_listening(self):
+        try:
+            if auth.current_user is None:
+                print("No user is authenticated.")
+            else:
+                print("Authenticated user:", auth.current_user['email'])
+            self.stream = db.child("message").stream(self.stream_handler, auth.current_user['idToken'])
+        except Exception as e:
+            print("Error during message push:", e)
+
+
+    def stream_handler(self, value):
+        if 'data' in value and self.count > 0:
+            data = value['data']
+            if 'timestamp' in data and 'sender' in data and 'email' in data and 'message' in data:
+                time = datetime.datetime.fromtimestamp(int(data["timestamp"]) / 1000.0).strftime('%H:%M')
+                if data["sender"] == self.userid:
+                    self.chat_area.controls.append(
+                        self.chat_message_ui(
+                            time,
+                            data["email"],
+                            data["message"],
+                            "Green",
+                            CrossAxisAlignment.END,
+                            MainAxisAlignment.END,
+                        )
+                    )
+                else:
+                    self.chat_area.controls.append(
+                        self.chat_message_ui(
+                            time,
+                            data["email"],
+                            data["message"],
+                            "lightblue",
+                            CrossAxisAlignment.START,
+                            MainAxisAlignment.START,
+                        )
+                    )
+                self.chat_area.update()
+        self.count += 1
+
+        
 
     def open_chat_box(self):
         self.chat_box.height = 650
         self.chat_box.update()
 
+    def chat_box_header(self):
+        return Card(
+            width=680,
+            height=50,
+            elevation=10,
+            margin=-12,
+            content = Container(
+                alignment=alignment.center,
+                padding=padding.only(top=20),
+                content=Text("Converge - Chat Room", color="white", size=20, weight=FontWeight.BOLD, text_align=TextAlign.CENTER),
+                bgcolor="black",
+            )
+        )
+    
     def build(self):
+        chat_column = Column(
+            controls=[
+                self.chat_box_header(),
+                Divider(height=2, thickness=2, color="transparent"),
+                Container(
+                    width=680,
+                    height=500,
+                    bgcolor="white",
+                    border = border.only(bottom=border.BorderSide(1, "black")),
+                    content = self.chat_area,
+                    ),
+                    Row(
+                        alignment=MainAxisAlignment.CENTER,
+                        vertical_alignment=CrossAxisAlignment.CENTER,
+                        controls=[
+                            self.chat_input ,
+                            self.send_chat_btn,     
+                        ]
+                    ),
+            ],    
+        )
+        self.chat_box.content = chat_column
         return self.chat_box
 
 
