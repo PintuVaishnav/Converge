@@ -3,10 +3,9 @@ import datetime
 import flet as ft
 from flet import *
 import time
-
+import tkinter as tk
 import requests
 from firebase_config import init_firebase
-import firebase_config
 
 # Initialize Firebase
 firebase = init_firebase()
@@ -22,18 +21,19 @@ class Authentication(UserControl):
         self.auth_box = Container(
             width=0,
             height=400,
-            bgcolor="white",
+            bgcolor="#FFFAF0",
             animate=animation.Animation(500, "easeOutBack"),
             border_radius=8,
             opacity=0,
             padding=20,
         )
-        self.sign_in_email = self.create_textfield("Enter Your Email ID", False)
+        self.sign_in_email = self.create_textfield("Enter Your Email ID", False,)
         self.sign_in_password = self.create_textfield("Enter Your Password", True)
         self.sign_in_btn = self.create_button("Sign In", self.auth_users)
         self.register_email = self.create_textfield("Register Your Email ID", False)
         self.register_password = self.create_textfield("Register Your Password", True)
         self.register_btn = self.create_button("Register", self.register_user)
+    
 
     def open_auth_box(self):
         self.auth_box.width = 740
@@ -70,7 +70,6 @@ class Authentication(UserControl):
             self.userid = user["localId"]
             self.email = user["email"]
             print("Sign-in successful:", self.email)
-            print("Auth ID Token:", auth.current_user['idToken'])
             self.close_auth_box()
         except Exception as e:
             print("Error during sign-in:", e)
@@ -93,6 +92,7 @@ class Authentication(UserControl):
             width=250,
             height=50,
             password=password,
+            text_style=TextStyle(color="black")
         )
 
     def create_button(self, label, btn_func):
@@ -172,6 +172,7 @@ class ChatView(UserControl):
             text_size=15,
             content_padding=8,
             border_radius=5,
+            text_style=TextStyle(color="black"),
         )
         self.send_chat_btn = ElevatedButton(
             content=Icon(
@@ -260,7 +261,7 @@ class ChatView(UserControl):
                             time,
                             value["email"],
                             value["message"],
-                            "white" if value["sender"] == self.userid else "lightblue",
+                            "#90EE90" if value["sender"] == self.userid else "#ADD8E6",
                             CrossAxisAlignment.END if value["sender"] == self.userid else CrossAxisAlignment.START,
                             MainAxisAlignment.END if value["sender"] == self.userid else MainAxisAlignment.START,
                         )
@@ -300,7 +301,7 @@ class ChatView(UserControl):
                             time,
                             data["email"],
                             data["message"],
-                            "Green",
+                            "#90EE90",
                             CrossAxisAlignment.END,
                             MainAxisAlignment.END,
                         )
@@ -311,7 +312,7 @@ class ChatView(UserControl):
                             time,
                             data["email"],
                             data["message"],
-                            "lightblue",
+                            "#ADD8E6",
                             CrossAxisAlignment.START,
                             MainAxisAlignment.START,
                         )
