@@ -208,9 +208,6 @@ class ChatView(UserControl):
             self.chat_input.value = ""
             self.chat_input.update()
 
-    
-
-
 
     def chat_message_ui(self,sent_time, name, text_message, bg, col_pos, row_pos):
         return Container(
