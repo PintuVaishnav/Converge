@@ -1,3 +1,4 @@
+# i have all the credential data from here just for security reasons
 import pyrebase
 
 def init_firebase():
