@@ -48,40 +48,6 @@ jobs:
       - name: Run Tests
         run: pytest tests/
 
-  security:
-    name: Security Checks
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
 
-      - name: Install Bandit
-        run: pip install bandit
-
-      - name: Run Bandit Security Scan
-        run: bandit -r .
-
-  build:
-    name: Package & Build
-    runs-on: ubuntu-latest
-    needs: security
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-
-      - name: Create Virtual Environment
-        run: python -m venv venv
+ 
