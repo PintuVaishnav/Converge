@@ -3,11 +3,9 @@ import datetime
 import flet as ft
 from flet import *
 import time
-import tkinter as tk
 import requests
 from firebase_config import init_firebase
 
-# Initialize Firebase
 firebase = init_firebase()
 auth = firebase.auth()
 db = firebase.database()

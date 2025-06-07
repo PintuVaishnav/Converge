@@ -1,13 +1,17 @@
 {
   "type": "service_account",
-  "project_id": "your-project-id",
-  "private_key_id": "your-private-key-id",
-  "private_key": "-----BEGIN PRIVATE KEY-----\n[REDACTED]\n-----END PRIVATE KEY-----\n",
-  "client_email": "your-client-email@your-project-id.iam.gserviceaccount.com",
-  "client_id": "your-client-id",
+  "project_id": "converge-chatapp",
+  "private_key_id": "1a9c8a99e5c7363423c6cc625b9735d713e3cf7f",
+  "private_key": "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDlYMQ2VCLkWd2R\ne5Be7QAMTmL/BiuloXzd1OFzoq6Fptvtx9SfsDh1KW0NulG5YiGWqH7kjQDmMSDB\nRpmOfpAgwRhv4I5vmpOxkunLdQsdqG2FPaohhFvdzdX8AOKYurUEw447y921JqGq\nOvdR48b/t/jNw4zJbqSHDUcqLaUYmxSYwqfm7x2lRayNPbYG1zhHSIZB1/ggOl6g\nlAJBycwd7XP+kF9VF78+8q9ybbRCO8aSOVcE4LEmeQ69VcsUocUwY50RBvkd12zJ\nnBMY1pQ9Vzh3BIASYO4u0Fpk0cPcy+xn6t5k/P1abhcwm8jECIMae9OeCxVQvgJx\nupwsLObnAgMBAAECggEAWNsM90zNfW8QhVh7+0HNCHdfIxKVWuK9V8OtGFn3SF/0\nh16nT7r4i+5hx/UaznkksNOR4GB87i8u1KBQQOJnW8DhgglXtAUJ3LqgJcgv56vE\nzV4vZy96VOh1UdtX7Dk7gV5t3V0ihBe0fZi9EPRvNMVkNPVhNvDM/GIY5M5sy6Qf\n7cKSqIOl0OcoOCNnPWk23c7mCLo+jWZefENWVUgs1e/0VYmxjFd7bwmvbiCBoG+t\nrFJMLojSX1TV+QGa38cRjlq/hfEmAf8x1+dPhmQ93lPCmBPsSHEMlEsurUqh4T6v\nGaND4BjcEVrak8YRstosbuG+Tv6flBWk9matODx8OQKBgQDzrjrYFtAR3Vn5USVv\nTezZ1hy5TUYZq/8e67QfggYSvqxUDyxz70b8g5jlKj8CPXnUNP9F1/6SEWWcNVyI\nlPvVYW5J6nVeNZBBXCTRtKmK0imFXEuI697DF97ABLJBjFPOxgHWD6tI//f7Jzlm\npdJpmTcVfDi03h+hEnvL5zHD3wKBgQDw+W3eAov6F/ck1v1F+RQc1lfffjMPJZMG\nCqNjOW3rst7dzR2TInx9By3SDF3UP5AL4tIwlnbz6EwUVfkMmO25bDnHfU1QURS3\nqmuW3SCTZK2jLHwbTUbmsYY3iQjasbXzWScWaA6ud6T20QE+AQfG+rhLg2hSF2tf\nGQQZmA79+QKBgHqC7Ri5F3Dz3YloT67O+bZnXFeZTxYXEBPGou94Wn9QF6nHWy0K\nbqEDtHn6rGT+7WJQJstBlb5wOqq3dUdBx/72lhFZbBqqSVVi8yvvbZHaqX9f8KXt\nGDjzpkzZz5j+6R+7Ey9A/3ebIVzG0qgV1Fy86CHIK2ZbioFbnpvcJ3v3AoGBALxk\nBITgsNZhDhJ7EZ82z4aL/D75xqk80uiSQJI+P7VZLetxhIGXIIQOrL/ecyyQVOk1\n9uWNfInLPk9Xt1El7hRci/9t8pesC+pbDanwTptsxmMfUBd4HsoUV73rIET5Uiph\ntLFLwM6dMxbS54m1/IKPWK2QmmozbPn38MChpHbhAoGAUuoqa5ketRqPBbcBQVbT\n6vJzgYf50joiyXdCHNBM/nrUk8th9MGNrmRU/tSAqY834eGUhjxEAxIXBhY/MMXO\nB9D7XGCaj/jy0B5S9r362/pfHEgwUdlyORYy15MLWG/fgZ8R1HsM27A8giqwEyO5\nKa07zYWhrd45b4vMrn9F9M0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-px65k@converge-chatapp.iam.gserviceaccount.com",
+  "client_id": "112336778056426729595",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
   "token_uri": "https://oauth2.googleapis.com/token",
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/your-client-email@your-project-id.iam.gserviceaccount.com",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-px65k%40converge-chatapp.iam.gserviceaccount.com",
   "universe_domain": "googleapis.com"
 }
+
+
+
+
