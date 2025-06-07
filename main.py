@@ -377,5 +377,6 @@ def main(page: ft.Page):
     auth_view.open_auth_box()
 
 
+
 if __name__ == "__main__":
-    ft.app(target=main)
+    ft.app(target=main, host="0.0.0.0", port=8550)
